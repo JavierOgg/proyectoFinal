@@ -1,0 +1,53 @@
+$def with (tipoTweets, sugerencias)
+$if tipoTweets == "peliculas":
+	$for (tweet, nes, peliculas) in sugerencias:
+		<div class="clearfix">
+			<dl class="movie-header">
+				<dt>Tweet</dt>
+				<dd>$tweet</dd>
+				<dt>NEs</dt>
+				<dd>
+					$for ne in nes:
+						$ne - 
+					
+				</dd>
+			</dl>
+
+			$for pelicula in peliculas:
+				<div class="clearfix">
+					<div class="movie-left">
+						$if 'poster' in pelicula:
+							<img src="$pelicula['poster']['cover']" >	
+					</div>
+					<div class="movie-right">
+						<h2>$pelicula["title"]</h2>
+						$if 'plot_simple' in pelicula:
+							<p>$pelicula['plot_simple']</p>
+					</div>
+				</div>
+		</div>
+
+$if tipoTweets == "musica":
+	$for (tweet, nes, discos) in sugerencias:
+	<div class="clearfix">
+		<dl class="movie-header">
+			<dt>Tweet</dt>
+			<dd>$tweet</dd>
+			<dt>NEs</dt>
+			<dd>
+				$for ne in nes:
+					$ne - 
+				
+			</dd>
+		</dl>
+		$for disco in discos:
+		<div class="clearfix">
+			<div class="movie-left">
+				$for imagen in disco["image"]:
+			     		$if imagen["size"]=="extralarge":
+			    			<img src="$imagen['#text']" >
+			</div>
+			<div class="movie-right">
+				<h2>$disco["name"]</h2> by <span>$disco["artist"]</span>
+			</div>
+		</div>

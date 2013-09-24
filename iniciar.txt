@@ -1,0 +1,3 @@
+python -Wignore -m Pyro4.naming
+	Consultas: python -Wignore -m Pyro4.nsc list
+

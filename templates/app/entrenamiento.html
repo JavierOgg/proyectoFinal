@@ -1,0 +1,82 @@
+$def with (categorias, archivo)
+
+$ listaCategorias = ','.join(categorias)
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Que hago?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le styles -->
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/toastr.css" rel="stylesheet">
+
+
+  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+  <script src="js/html5shiv.js"></script>
+  <![endif]-->
+
+  <style>
+    table.table>tbody>tr>td{
+      vertical-align: middle;
+    }
+    th.tweet, td.tweet{
+      width: 30%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Administracion del sitio</h2>
+    <h3>
+      $if categorias==[]:
+        Archivo nuevo: $archivo
+      $else:
+        Agregar a archivo: $archivo
+    </h3>
+  <hr>
+   <button class="js-ajax btn btn-default" id="conectar_twitter">Conectar a twitter</button>
+  <hr>
+  <input type="text" id="termino_busqueda_tweets">
+   <button class="js-ajax btn btn-default" id="obtener_tweets">Obtener tweets</button>
+   
+   <hr>     
+        <div>
+      <input type="text" id="categorias" name="categorias" placeholder="Categorias separadas por comas" value="$listaCategorias" style="width: 30%" />
+        <button class="js-ajax btn btn-default" id="clasificar_tweets_entrenamiento">Clasificar tweets</button> 
+     </div>
+     <input type="hidden" value="$archivo" id="archivo">
+     <hr>
+
+  <div id="respuesta">
+    
+  </div>
+
+
+   <div class="footer text-center">
+  </div>
+
+  <script>
+
+
+
+  </script>
+
+</div> <!-- /container -->
+<!-- Le javascript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="/static/js/jquery-2.0.3.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+  <script src="/static/js/toastr.js"></script>
+  <script src="/static/js/quehago.js"></script>
+    
+    
+  </script>
+</body>
+</html>
+

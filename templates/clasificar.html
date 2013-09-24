@@ -1,0 +1,30 @@
+$def with (tweets, categorias)
+$code:
+	def minimizar(palabra):
+		return palabra.lower()
+
+<form>
+	<table id="tabla_clasificacion" class="table">
+		<thead>
+			<tr>
+				<th>Tweet</th>
+				$for categoria in categorias:
+					<th class="categoria">$categoria</th>
+			</tr>
+		</thead>
+		<tbody>
+			$for tweet in tweets:
+				$ iteracion = loop.index0
+				<tr>
+					<td class="tweet">$tweet</td>
+					$for categoria in categorias:
+						<td><input type="radio" class="radioButton" name="$iteracion" id="$iteracion"
+						$if loop.index0 == 0:
+							checked="checked"
+						 value="$categoria"></td>
+				</tr>
+		</tbody>
+	</table>
+</form>
+ 
+

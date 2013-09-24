@@ -1,0 +1,34 @@
+$def with (datos)
+$code:
+	def minimizar(palabra):
+		return palabra.lower()
+
+<table class="table">
+	<thead>
+		<tr>
+			$if tipo(datos[0]) is tuple:
+				$for campo in datos[0]:
+					<th class="$minimizar(campo)">$campo</th>
+			$else:
+				<th class="$minimizar(datos[0])">$datos[0]</th>
+		</tr>
+	</thead>
+	<tbody>
+		$for dato in datos[1:]:
+			<tr>
+				$if tipo(dato) is tuple:
+					$for campo in dato:
+						$if tipo(campo) is list:
+							<td>
+							$for elem in campo:
+								$elem - 
+							</td>
+						$else: 
+							<td>$campo</td>
+				$else:
+					<td>$dato</td>
+			</tr>
+	</tbody>
+</table>
+ 
+
