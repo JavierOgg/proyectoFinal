@@ -34,6 +34,7 @@
           </div>
           <nav id="globalNav">
             <ul>
+              <li><a href="./clasificacion">Ver clasificacion timeline</a></li>
               <li><a href="/">Inicio</a></li>
             </ul>
           </nav>
@@ -49,17 +50,22 @@
             <h1>Inicializacion</h1>
            </div>
         </header>
-        
+
         <div class="row-container">
-          
+
           <div class="exp-contents">
-            
+
             <div class="box-btn">
               <a href="#" class="js-ajax" id="conectar_twitter">
                 <div class="box-btn-txt">Conectar a twitter</div>
               </a>
             </div>
 
+            <div class="box-btn">
+              <a href="#" class="js-ajax" id="reentrenar_clasificador">
+                <div class="box-btn-txt">Entrenar clasificador con sentimientos</div>
+              </a>
+            </div>
 
 
           </div>
@@ -73,7 +79,7 @@
             <h1>Administracion de tweets</h1>
            </div>
         </header>
-        
+
         <div class="row-container">
           <div class="exp-contents">
             <h2>Obtener tweets</h2>
@@ -92,7 +98,7 @@
               <a href="#" class="js-ajax" id="mostrar_tweets">
                 <div class="box-btn-txt">Mostrar tweets almacenados</div>
               </a>
-            </div>          
+            </div>
             <br >
 
             <h2>Analisis de sentimientos:</h2>
@@ -119,7 +125,7 @@
               <a href="#" class="js-ajax" id="mostrar_nes">
                 <div class="box-btn-txt">Mostrar</div>
               </a>
-            </div><br > 
+            </div><br >
 
             <h2>Recomendaciones</h2>
             <div class="box-btn">
@@ -172,7 +178,7 @@
         </header>
         <div class="row-container">
           <div class="exp-contents">
-            <form id="form_entrenamiento" method="POST" action="./admin/entrenamiento">
+            <form id="form_entrenamiento" method="POST" action="./entrenamiento">
               <fieldset>
                 <label class="box-btn-txt js-ajax" id="submit_ir_a_entrenamiento" for="name">Iniciar</label>
                 <input type="text" name="archivo" id="archivo_entrenamiento" placeholder="Nombre de archivo">
@@ -199,8 +205,8 @@ var topH = 500;
 
 <script src="/static/js/toastr.js"></script>
 <script src="/static/js/admin.js"></script>
-    
-    
+
+
 
 </body>
 </html>

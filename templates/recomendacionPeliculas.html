@@ -1,0 +1,103 @@
+$def with (recomendaciones)
+
+$ contador = 1
+
+$for (puntaje, id, fecha, titulo, generos, idioma, rating, anio, imdb_id, actores, sinopsis, poster, duracion, imdb_url) in recomendaciones:
+	<section class="seccion-resultado">
+	  <header>
+	    <div class="row-container">
+	      <h2 style="background-image:url('/static/images/expertise-iconcolor-event.jpg');"><div class="diag-line"></div>$contador</h2>
+	      $ contador = contador + 1
+	      <h1>$titulo ($rating)</h1>
+	    </div>
+	  </header>
+
+	  <div class="row-container">
+	    <div class="exp-bulbs2"></div>
+	    <div class="section-movie-left">
+	    	<img src="$poster" />
+	    </div>
+	    <div class="section-movie-right">
+		    <div class="exp-contents">
+		    	<dl>
+		    		<dt>Puntuacion sugerida</dt>
+		    		<dd>
+			    		<div>
+			    		$ puntaje= float(puntaje)
+						$if puntaje<=0.5:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="0.5" title="La odie" checked="checked" >
+						$else:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="0.5" title="La odie">
+						$if puntaje>0.5 and puntaje<=1:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="1" title="La odie" checked="checked" >
+						$else:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="1" title="La odie">
+
+						$if puntaje > 1 and puntaje<=1.5:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="1.5" title="La odie" checked="checked" >
+						$else:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="1.5" title="La odie">
+						$if puntaje>1.5 and puntaje<=2:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="2" title="La odie" checked="checked" >
+						$else:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="2" title="La odie">
+
+						$if puntaje > 2 and  puntaje<=2.5:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="2.5" title="La odie" checked="checked" >
+						$else:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="2.5" title="La odie">
+						$if puntaje>2.5 and puntaje<=3:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="3" title="La odie" checked="checked" >
+						$else:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="3" title="La odie">
+
+						$if puntaje > 3 and  puntaje<=3.5:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="3.5" title="La odie" checked="checked" >
+						$else:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="3.5" title="La odie">
+						$if puntaje>3.5 and puntaje<=4:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="4" title="La odie" checked="checked" >
+						$else:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="4" title="La odie">
+
+						$if puntaje > 4 and  puntaje<=4.5:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="4.5" title="La odie" checked="checked" >
+						$else:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="4.5" title="La odie">
+						$if puntaje>4.5:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="5" title="La odie" checked="checked" >
+						$else:
+							<input class="star {split:2} required" type="radio" name="estrella$id" data-id="$id" disabled='disabled' value="5" title="La odie">
+						</div>
+						<button class="aumentar_puntaje" data-id="$id">Mas</button>
+						<button class="disminuir_puntaje" data-id="$id">Menos</button>
+					</dd>
+		    		<dt>Año</dt>
+		    		<dd>$anio</dd>
+		    		<dt>Generos</dt>
+		    		<dd>$generos</dd>
+		    		<dt>Actores</dt>
+		    		<dd>$actores</dd>
+		    		<dt>Duracion</dt>
+		    		<dd>$duracion</dd>
+		    		<dt>Idioma</dt>
+		    		<dd>$idioma</dd>
+		    		<dt>Sinopsis</dt>
+		    		<dd>$sinopsis</dd>
+	    		</dl>
+		      <p></p>
+
+		      <div class="box-btn">
+		        <a href="fearless.php">
+		        <div class="box-btn-txt">ME GUSTO</div>
+		        <div class="box-icon">
+		          <img src="/static/images/icon-star@2x.png" width="27" height="26" alt="star" class="show" style="top: 10px; opacity: 1;">
+		          <img src="/static/images/icon-star-over@2x.png" width="27" height="26" alt="star" class="hide" style="top: 10px; opacity: 0;">
+		        </div>
+		        </a>
+		      </div>
+  		</div>
+	    </div>
+	  </div>
+
+	</section>

@@ -2,10 +2,10 @@
 
 import Pyro4
 
+
 class Almacenador(object):
 
     def status(self):
-        
         return
 
     def get_tweets(self):
@@ -26,7 +26,7 @@ class Almacenador(object):
     def set_tweets(self, tweets):
         self.tweets = tweets
         print "Tweets guardados"
-        return 
+        return
 
     def set_tweets_clasificados(self, tweetsClasificados):
         self.tweetsClasificados = tweetsClasificados
@@ -49,11 +49,11 @@ class Almacenador(object):
         return
 
 
-servidor_almacenador=Almacenador()
+servidor_almacenador = Almacenador()
 
-daemon=Pyro4.Daemon()                 # make a Pyro daemon
-ns=Pyro4.locateNS()                   # find the name server
-uri=daemon.register(servidor_almacenador)   # register the greeting object as a Pyro object
+daemon = Pyro4.Daemon()                 # make a Pyro daemon
+ns = Pyro4.locateNS()                   # find the name server
+uri = daemon.register(servidor_almacenador)   # register the greeting object as a Pyro object
 ns.register("quehago.almacenador", uri)  # register the object with a name in the name server
 
 print 'Ready.'

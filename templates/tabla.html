@@ -6,7 +6,7 @@ $code:
 <table class="table">
 	<thead>
 		<tr>
-			$if tipo(datos[0]) is tuple:
+			$if tipo(datos[0], tuple):
 				$for campo in datos[0]:
 					<th class="$minimizar(campo)">$campo</th>
 			$else:
@@ -16,19 +16,19 @@ $code:
 	<tbody>
 		$for dato in datos[1:]:
 			<tr>
-				$if tipo(dato) is tuple:
+				$if tipo(dato, tuple):
 					$for campo in dato:
-						$if tipo(campo) is list:
+						$if tipo(campo, list):
 							<td>
 							$for elem in campo:
-								$elem - 
+								$elem -
 							</td>
-						$else: 
+						$else:
 							<td>$campo</td>
 				$else:
 					<td>$dato</td>
 			</tr>
 	</tbody>
 </table>
- 
+
 

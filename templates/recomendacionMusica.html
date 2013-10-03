@@ -1,0 +1,45 @@
+$def with (recomendaciones)
+
+$ contador = 1
+
+$for (id, artista, album, imagen, lastfm_url) in recomendaciones:
+	<section class="seccion-resultado">
+	  <header>
+	    <div class="row-container">
+	      <h2 style="background-image:url('/static/images/expertise-iconcolor-event.jpg');"><div class="diag-line"></div>$contador</h2>
+	      $ contador = contador + 1
+	      <h1>$album</h1>
+	    </div>
+	  </header>
+
+	  <div class="row-container">
+	    <div class="exp-bulbs2"></div>
+	    <div class="section-movie-left">
+	    	<img src="$imagen" />
+	    </div>
+	    <div class="section-movie-right">
+		    <div class="exp-contents">
+		    	<dl>
+		    		<dt>Puntuacion sugerida</dt>
+		    		<dd>
+					</dd>
+		    		<dt>Artista</dt>
+		    		<dd>$artista</dd>
+	    		</dl>
+	    		<a href="$lastfm_url">Mas info</a>
+		      <p></p>
+
+		      <div class="box-btn">
+		        <a href="fearless.php">
+		        <div class="box-btn-txt">ME GUSTO</div>
+		        <div class="box-icon">
+		          <img src="/static/images/icon-star@2x.png" width="27" height="26" alt="star" class="show" style="top: 10px; opacity: 1;">
+		          <img src="/static/images/icon-star-over@2x.png" width="27" height="26" alt="star" class="hide" style="top: 10px; opacity: 0;">
+		        </div>
+		        </a>
+		      </div>
+  		</div>
+	    </div>
+	  </div>
+
+	</section>

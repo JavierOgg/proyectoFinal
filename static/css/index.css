@@ -1,7 +1,7 @@
 @charset "UTF-8";
 /* CSS Document */
 
-/* REFERENCE 
+/* REFERENCE
 font-family: 'Montserrat', sans-serif;
 font-family: 'Lily Script One', cursive;
 green - #bfc66c
@@ -18,14 +18,14 @@ html, body, div, span, h1, h2, h3, h4, h5, h6, p, img { margin: 0; padding: 0; b
 nav ul{list-style: none;}
 input{-moz-box-sizing: border-box; -ms-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
 input:focus, select:focus {outline: none; }
-//html{-webkit-text-size-adjust:none; -ms-text-size-adjust:none; } 
+//html{-webkit-text-size-adjust:none; -ms-text-size-adjust:none; }
 strong{font-weight: 700;}
 
 
 /* HEADER */
 
 #headerContainer{height:120px; width: 100%; min-width: 948px; position: fixed; top: 0; left: 0; z-index: 10;}
-#admin-section #headerContainer{
+#admin-section #headerContainer, #entrenamiento-section #headerContainer{
 	position: static;
 }
 #header-bg{width: 100%; height: 100px; background-color: #fff; position: relative;}
@@ -44,9 +44,9 @@ strong{font-weight: 700;}
 /* ADMIN */
 
 .movie-header{
-	width: 100%; 
-	background-color: #f1f0ea; 
-	border-bottom: 2px solid #bfc66c; 
+	width: 100%;
+	background-color: #f1f0ea;
+	border-bottom: 2px solid #bfc66c;
 	border-top: 2px solid #bfc66c;
 }
 
@@ -75,7 +75,11 @@ strong{font-weight: 700;}
 
 /* PROFILE */
 
+.section-movie-left, .section-movie-right{
+	margin-top: 10px
+}
 .section-movie-left{
+
 	width: 230px;
 	float: left;
 }
@@ -218,28 +222,35 @@ section p{font:15px/22px 'Montserrat', sans-serif; color: #374246;}
 #contact-box footer p{font:400 15px/60px 'Montserrat', sans-serif; color: #f1f0ea;}
 form fieldset{
 	width: 375px;
-	height: 40px; 
-	border: 2px solid #374246; 
+	height: 40px;
+	border: 2px solid #374246;
+}
+#entrenamiento-section form fieldset{
+	width: auto;
+}
+#entrenamiento-section input{
+	width: 100%;
 }
 form label{
 	font: 14px/40px 'Montserrat', sans-serif
 }
 form fieldset label{
 	width:30%;
-	height: 40px; 
-	float: right !important; 
-	background-color: #fdc415; 
+	height: 40px;
+	float: right !important;
+	background-color: #fdc415;
 }
 form input[type=text]{
-	float: left; 
-	width: 62%; 
-	height: 40px; 
-	padding-left: 10px; 
-	border: none; 
-	font:400 12px/40px 'Montserrat', sans-serif; 
-	color: #374246; 
+	float: left;
+	width: 62%;
+	height: 40px;
+	padding-left: 10px;
+	border: none;
+	font:400 12px/40px 'Montserrat', sans-serif;
+	color: #374246;
 	text-transform: uppercase;
 }
+#entrenamiento-section input[type=text]{}
 form fieldset~fieldset{margin-top: 18px;}
 #form-btn{background-color: #bfc66c; margin: 42px auto 30px;}
 #sending{display: none; opacity:0; filter:alpha(opacity=0);}
@@ -249,7 +260,7 @@ form fieldset~fieldset{margin-top: 18px;}
 
 /* EXPERTISE PAGE */
 
-#first-section, #exp-event{
+#contenido{
 	margin-top: 130px;
 }
 
@@ -257,34 +268,34 @@ form fieldset~fieldset{margin-top: 18px;}
 #hero-contents-expertise h1{margin-top:18px;}
 #hero-contents-expertise p{margin-bottom:29px;}
 #hero-contents-expertise h2{font:30px 'Lily Script One', cursive; color: #fcc622;}
-.admin-section [id^="exp-"]{width: 100%; min-width: 948px; padding-bottom: 85px;}
+.admin-section .seccion-resultado{width: 100%; min-width: 948px; padding-bottom: 85px;}
 .admin-section{
 	padding-bottom: 10px
 }
-.admin-section header, [id^="exp-"] header{width: 100%; height: 108px; background-color: #f1f0ea; border-bottom: 2px solid #bfc66c; border-top: 2px solid #bfc66c;}
+.admin-section header, .seccion-resultado header{width: 100%; height: 108px; background-color: #f1f0ea; border-bottom: 2px solid #bfc66c; border-top: 2px solid #bfc66c;}
 .profile{
 	max-width: 1024px;
 	margin: 0 auto;
 }
 .profile header {
-	width: 100%; 
-	height: 108px; 
-	background-color: #f1f0ea; 
-	border-bottom: 2px solid #bfc66c; 
+	width: 100%;
+	height: 108px;
+	background-color: #f1f0ea;
+	border-bottom: 2px solid #bfc66c;
 	border-top: 2px solid #bfc66c;
 	border-right: 2px solid #bfc66c;
 }
 
 .admin-section header{
-	height: 45px; 
+	height: 45px;
 	border: 2px solid #bfc66c;
 }
 
-.admin-section .row-container, [id^="exp-"] .row-container{margin: 0 auto; position: relative; overflow: hidden;}
+.admin-section .row-container, .seccion-resultado .row-container{margin: 0 auto; position: relative; overflow: hidden;}
 .admin-section .row-container{
 	margin: 0 10px;
 }
-.admin-section header h1, [id^="exp-"] header h1{font:20px/108px 'Montserrat', sans-serif; color: #374246; text-transform: uppercase; margin-left: 45px; float: left;}
+.admin-section header h1, .seccion-resultado header h1{font:20px/108px 'Montserrat', sans-serif; color: #374246; text-transform: uppercase; margin-left: 45px; float: left;}
 .admin-section header h1{
 	font:17px/45px 'Montserrat'
 }
@@ -292,10 +303,10 @@ form fieldset~fieldset{margin-top: 18px;}
 .admin-section .box-btn{
 	height: auto;
 	margin-top: 12px;
-	font: 12px/37px 'Montserrat', sans-serif; 
+	font: 12px/37px 'Montserrat', sans-serif;
 }
 
-.admin-section header h2, [id^="exp-"] header h2{width: 188px; height: 105px; padding: 3px 0px 0px 8px; border-left: 2px solid #bfc66c; border-right: 2px solid #bfc66c; float: left; background: #fff center center no-repeat; font:700 13px/13px 'Montserrat', sans-serif; color: #907d73;}
+.admin-section header h2, .seccion-resultado header h2{width: 188px; height: 105px; padding: 3px 0px 0px 8px; border-left: 2px solid #bfc66c; border-right: 2px solid #bfc66c; float: left; background: #fff center center no-repeat; font:700 13px/13px 'Montserrat', sans-serif; color: #907d73;}
 #expertise-nav{width: 920px; height: 76px; margin: 45px auto; text-align: center; position: relative;}
 .exp-nav-icon{display: inline; cursor: pointer; position: relative;} .exp-nav-icon~.exp-nav-icon{margin-left: 50px;}
 .exp-nav-text{position: absolute; font:12px/16px 'Montserrat', sans-serif; color: #f1f0ea;}
@@ -311,10 +322,10 @@ form fieldset~fieldset{margin-top: 18px;}
 }
 .exp-contents p, .exp-contents li{font:300 15px/22px 'Roboto', sans-serif; color: #374246;}
 .exp-contents p~p, .exp-contents p~ul{margin-top: 12px;}
-.admin-section ul, [id^="exp-"] ul{list-style: none; margin-left: 35px;}
-.admin-section li, [id^="exp-"] li{text-indent: -.7em; margin-bottom: 10px;}
-.admin-section li:before, [id^="exp-"] li:before{content: '• ';}
-.admin-section .box-icon  img, [id^="exp-"] .box-icon img{position: absolute; top:12px; left:12px;}
+.admin-section ul, .seccion-resultado ul{list-style: none; margin-left: 35px;}
+.admin-section li, .seccion-resultado li{text-indent: -.7em; margin-bottom: 10px;}
+.admin-section li:before, .seccion-resultado li:before{content: '• ';}
+.admin-section .box-icon  img, .seccion-resultado .box-icon img{position: absolute; top:12px; left:12px;}
 .diag-line{width:2px; height:57px; position: absolute; top:-10px; left:20px; background-color: #bfc66c; -moz-transform: rotate(45deg); -o-transform: rotate(45deg); -webkit-transform: rotate(45deg); -ms-transform: rotate(45deg);  transform: rotate(45deg); filter:  progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand',  M11=0.9914448613738104, M12=-0.13052619222005157,M21=0.13052619222005157, M22=0.9914448613738104);-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.9914448613738104, M12=-0.13052619222005157, M21=0.13052619222005157, M22=0.9914448613738104,sizingMethod='auto expand')"; zoom: 1;}
 .backtop{width: 116px; height: 29px; border: 2px solid #bfc66c; float: right; color: #907d73; font:700 10px/32px 'Montserrat', sans-serif; text-align: center; text-transform: uppercase; margin-top: 38px; background-color: #f1f0ea; cursor: pointer;}
 #percent-boxes{margin-top:50px; overflow:hidden;}
@@ -339,6 +350,7 @@ table {
 .table td,
   .table th {
     background-color: #fff !important;
+    text-align: center;
   }
   .table {
     border-collapse: collapse !important;
@@ -623,4 +635,7 @@ table th[class*="col-"] {
 
 .clearfix:after {
   clear: both;
+}
+#respuesta tr:focus{
+	background-color: red;
 }

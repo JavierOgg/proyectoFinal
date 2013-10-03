@@ -8,8 +8,8 @@ $if tipoTweets == "peliculas":
 				<dt>NEs</dt>
 				<dd>
 					$for ne in nes:
-						$ne - 
-					
+						$ne -
+
 				</dd>
 			</dl>
 
@@ -17,7 +17,7 @@ $if tipoTweets == "peliculas":
 				<div class="clearfix">
 					<div class="movie-left">
 						$if 'poster' in pelicula:
-							<img src="$pelicula['poster']['cover']" >	
+							<img src="$pelicula['poster']['cover']" >
 					</div>
 					<div class="movie-right">
 						<h2>$pelicula["title"]</h2>
@@ -36,8 +36,8 @@ $if tipoTweets == "musica":
 			<dt>NEs</dt>
 			<dd>
 				$for ne in nes:
-					$ne - 
-				
+					$ne -
+
 			</dd>
 		</dl>
 		$for disco in discos:

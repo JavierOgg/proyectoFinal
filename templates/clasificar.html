@@ -3,28 +3,35 @@ $code:
 	def minimizar(palabra):
 		return palabra.lower()
 
+	def sinEspacios(palabra):
+		return palabra.strip()
+
 <form>
 	<table id="tabla_clasificacion" class="table">
 		<thead>
 			<tr>
 				<th>Tweet</th>
 				$for categoria in categorias:
-					<th class="categoria">$categoria</th>
+					<th class="categoria">$sinEspacios(categoria)</th>
 			</tr>
 		</thead>
 		<tbody>
-			$for tweet in tweets:
+			$for (id,tweet) in tweets:
 				$ iteracion = loop.index0
 				<tr>
 					<td class="tweet">$tweet</td>
+					<input type="hidden" class="tweetId" name="tweetId" value="$id">
 					$for categoria in categorias:
 						<td><input type="radio" class="radioButton" name="$iteracion" id="$iteracion"
 						$if loop.index0 == 0:
 							checked="checked"
-						 value="$categoria"></td>
+						 value="$sinEspacios(categoria)">
+
+
+						 </td>
 				</tr>
 		</tbody>
 	</table>
 </form>
- 
+
 
