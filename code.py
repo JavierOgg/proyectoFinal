@@ -1,10 +1,11 @@
 import web
-# import logging
 import json
 import Pyro4
 
-server_clasificador = Pyro4.Proxy("PYRONAME:quehago.clasificador")    # use name server object lookup uri shortcut
+server_clasificador_sentimientos = Pyro4.Proxy("PYRONAME:quehago.clasificador.sentimientos")    # use name server object lookup uri shortcut
+server_clasificador_categorias = Pyro4.Proxy("PYRONAME:quehago.clasificador.categorias")    # use name server object lookup uri shortcut
 server_procesador = Pyro4.Proxy("PYRONAME:quehago.procesador")    # use name server object lookup uri shortcut
+server_procesador._pyroOneway.add("actualizar_timeline")
 server_almacenador = Pyro4.Proxy("PYRONAME:quehago.almacenador")    # use name server object lookup uri shortcut
 
 
@@ -19,19 +20,24 @@ render = web.template.render('templates/', globals={'imprimir': imprimirlindo, '
 urls = (
     '/', 'index',
     '/login', 'login',
-    '/profile/(.*)', 'profile',
+    '/profile', 'profile',
     '/admin', 'admin',
+    '/test', 'test',
     '/admin/utilidades/(.*)', 'utilidades',
     '/entrenamiento', 'entrenamiento',
     '/clasificacion', 'clasificacion',
     '/interaccion_usuario/(.*)', 'interaccion_usuario',
-    '/usuario/logout', 'logout'
+    '/logout', 'logout'
 )
 
 app = web.application(urls, globals())
 
 if web.config.get('_session') is None:
-    session = web.session.Session(app, web.session.DiskStore('sessions'), initializer={'screen_name': ''})
+    session = web.session.Session(app, web.session.DiskStore('sessions'), initializer={
+        'screen_name': '',
+        'oauth_token': '',
+        'oauth_token_secret': ''
+    })
     web.config._session = session
 else:
     session = web.config._session
@@ -44,26 +50,43 @@ class index:
 
 class login:
     def GET(self):
-        data = {}
-        data['screen_name'] = 'javoBahia'
-        session.screen_name = data['screen_name']
+        if session['screen_name'] == '':
+            APP_KEY = 'oyEys6d4bYh3VVMHE8cvAw'
+            APP_SECRET = 'wqHM5ZuDOQwRmD1VzBjLxHH6pKu9FAfo1gPp7nUSKc4'
 
-        resultado = server_procesador.crear_usuario_en_bd(data['screen_name'])
+            print "no hay sesion"
 
-        web.redirect('/profile/'+str(resultado))
+            from twython import Twython
+
+            session.oauth_token = web.input().oauth_token
+            session.oauth_token_secret = web.input().oauth_token_secret
+
+            twitter = Twython(APP_KEY, APP_SECRET, session.oauth_token, session.oauth_token_secret)
+
+            data = twitter.verify_credentials()
+
+            session.screen_name = data['screen_name']
+
+        server_procesador.crear_usuario_en_bd(session.screen_name, session.oauth_token, session.oauth_token_secret)
+
+        server_procesador.actualizar_timeline(session.screen_name)
+
+        web.redirect('/profile')
 
 
 class admin:
     def GET(self):
         return render.admin()
 
-class admin:
+
+class clasificacion:
     def GET(self):
         return render.clasificacion()
 
+
 class entrenamiento:
     def GET(self):
-        return render.entrenamiento('', 'COMO INICIAR ESTO?')
+        return render.entrenamiento('', '')
 
     def POST(self):
         archivo = web.input().archivo
@@ -78,7 +101,7 @@ class logout:
 
 
 class profile:
-    def GET(self, resultado):
+    def GET(self):
         if (not 'screen_name' in session):
             web.redirect('/')
         return render.profile(session.screen_name)
@@ -120,7 +143,7 @@ class utilidades:
             return render.tabla(campos+server_almacenador.get_tweets())
 
         if funcion == "clasificar_tweets":
-            return server_clasificador.analizar_sentimientos()
+            return server_clasificador_sentimientos.analizar_sentimientos()
 
         if funcion == "mostrar_tweets_clasificados":
             campos = [("Tweet", "Palabras", "Clasificacion", "Certeza")]
@@ -150,12 +173,11 @@ class utilidades:
     def POST(self, funcion):
 
         if funcion == "reentrenar_clasificador":
-            return server_clasificador.entrenar_clasificador()
+            return server_clasificador_sentimientos.entrenar_clasificador()
 
         if funcion == "reentrenar_clasificador_archivo":
             archivo = web.input().archivo
-            return server_clasificador.entrenar_clasificador(archivo)
-
+            return server_clasificador_sentimientos.entrenar_clasificador(archivo)
 
         if funcion == "clasificar_tweets_entrenamiento":
             categorias = web.input().categorias.split(',')
@@ -173,8 +195,10 @@ class utilidades:
             tweets_entrenamiento = json.loads(web.input().entrenamiento)
             archivo = web.input().archivo
 
-            server_clasificador.editar_archivo_entrenamiento(archivo, tweets_entrenamiento)
+            server_clasificador_sentimientos.editar_archivo_entrenamiento(archivo, tweets_entrenamiento)
             return "oka"
+
+
 
 if __name__ == "__main__":
     app.run()

@@ -50,10 +50,7 @@ $ listaCategorias = ','.join(categorias)
       <header>
         <div class="row-container">
           <h1>
-            $if categorias==[]:
-              Archivo nuevo: $archivo
-            $else:
-              Agregar a archivo: $archivo
+            Archivo: <input type="text" value="$archivo" style="width:auto" id="archivo">
           </h1>
          </div>
       </header>
@@ -80,10 +77,11 @@ $ listaCategorias = ','.join(categorias)
               </a>
             </div>
           </form>
-          <input type="hidden" value="$archivo" id="archivo">
+          <ul id="busquedas_realizadas"></ul>
         </div>
       </div>
     </section>
+
 
     <section id="respuesta"></section>
     <section class="admin-section">

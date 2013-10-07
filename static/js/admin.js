@@ -25,6 +25,7 @@ $(".js-ajax").on('click',function(){
 			datos.termino = $("#termino").val()
 			tipo = "POST";
 			mostrarToastr = false;
+			$("#busquedas_realizadas").append("<li>"+datos.termino+"</li>");
 			break;
 		case 'reentrenar_clasificador':
 			tipo = "POST";
@@ -66,10 +67,14 @@ $(".js-ajax").on('click',function(){
 				$("#guardar_tweets_clasificados").on('click', function(){
 					guardar_tweets_clasificados();
 				});
-				$("#respuesta td").focusin(function() {
-					  $( this ).css("background-color", "#bfc66c !important" );
+				$("#respuesta tr")
+					.focusin(function() {
+				  		$( this ).css("background-color", "#bfc66c" );
+					})
+					.focusout(function(){
+						$( this ).css("background-color", "white" );
 					});
-				$("#respuesta input:first").focus();
+				$("#respuesta .radioButton:first").focus();
 			}
 		}
 		self.removeClass("btn-warning").addClass("btn-success");
@@ -83,10 +88,13 @@ function guardar_tweets_clasificados(){
 		elem;
 
 	$("#tabla_clasificacion tbody tr").each(function() {
+		clasificacion = $(this).find(".radioButton:checked").val();
+		if (clasificacion=="descartar")
+			return
 		elem = {};
 		elem.tweet = $(this).find(".tweet").text();
 		elem.id = $(this).find('.tweetId').val();
-		elem.clasificacion = $(this).find(".radioButton:checked").val();
+		elem.clasificacion
 		datos.push(elem);
 	});
 

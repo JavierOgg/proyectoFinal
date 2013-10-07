@@ -4,27 +4,34 @@ import Pyro4
 from twython import Twython
 import MySQLdb
 import csv
+import time
 
 from funciones import obtenerNEs
 from funciones import obtenerDiscos
 from funciones import obtenerPeliculas
 
+APP_KEY = 'oyEys6d4bYh3VVMHE8cvAw'
+APP_SECRET = 'wqHM5ZuDOQwRmD1VzBjLxHH6pKu9FAfo1gPp7nUSKc4'
+
 server_almacenador = Pyro4.Proxy("PYRONAME:quehago.almacenador")    # use name server object lookup uri shortcut
+server_clasificador = Pyro4.Proxy("PYRONAME:quehago.clasificador.sentimientos")    # use name server object lookup uri shortcut
+server_clasificador._pyroOneway.add("analizar_sentimientos")
+
+Pyro4.config.ONEWAY_THREADED = True
 
 
 class Procesador(object):
 
     def __init__(self):
-        self.db_host = 'localhost'
-        self.db_user = 'root'
-        self.db_pass = 'fatigatti'
-        self.db_name = 'quehago'
-        print "inicializado"
         self.conectar_a_mysql()
         return
 
     def conectar_a_mysql(self):
-        self.db = MySQLdb.connect(host=self.db_host, user=self.db_user, passwd=self.db_pass, db=self.db_name)
+        db_host = 'localhost'
+        db_user = 'root'
+        db_pass = 'fatigatti'
+        db_name = 'quehago'
+        self.db = MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_name)
         print "conectado a la DB"
 
     def abrir_cursor(self):
@@ -36,18 +43,108 @@ class Procesador(object):
         else:
             self.cursor.execute(query)
 
-    def traer_datos(self):
-        self.rows = self.cursor.fetchall()
+    def actualizar_timeline(self, usuario):
+        # import locale
+        # locale.setlocale(locale.LC_TIME, "en_US")
+        from dateutil.parser import parse
+        sinceID = 0
 
-    def send_commit(self, query):
-        sql = query.lower()
-        if sql.count('select') < 1:
+        ## Obtenemos el id del ultimo tweet ya bajado ##
+        self.abrir_cursor()
+        query = "SELECT MAX(tweetID) FROM timeline_"+str(usuario)
+        self.ejecutar_consulta(query)
+
+        if self.cursor.rowcount < 0:
+            self.cerrar_cursor()
+            print "Error en la consulta"
+            return
+
+        resultados = self.cursor.fetchone()
+
+        sinceID = resultados[0] or 1
+
+        ## Obtenemos los datos de acceso del usuario ##
+        self.abrir_cursor()
+        self.ejecutar_consulta("SELECT oauth_token, oauth_token_secret FROM usuarios WHERE nombre_usuario=%s", usuario)
+        resultados = self.cursor.fetchone()
+        oauth_token = resultados[0]
+        oauth_token_secret = resultados[1]
+
+        ## Obtenemos el objeto de acceso a Twitter ##
+        twitter = Twython(APP_KEY, APP_SECRET, oauth_token, oauth_token_secret)
+
+        ## Inicio de minado de tweets
+        MAX_PAGES = 4
+
+        resultados = twitter.get_home_timeline(since_id=sinceID, count=200, include_rts=False)
+
+        listaTweets = []
+        for res in resultados:
+            if res['user']['screen_name'].lower() != usuario.lower():
+                created_at = str(res['created_at'].encode('utf-8'))
+                fecha = parse(created_at).strftime('%Y-%m-%d')
+                listaTweets.append(
+                    (
+                        str(res['id_str']),
+                        str(res['text'].encode('utf-8')),
+                        fecha
+                    )
+                )
+
+        self.abrir_cursor()
+        query = "INSERT INTO timeline_"+str(usuario)+"(tweetID, tweetTexto, tweetFecha) VALUES(%s, %s, %s)"
+
+        self.cursor.executemany(query, listaTweets)
+        self.db.commit()
+        self.cerrar_cursor()
+
+        print "Termino pagina 1"
+
+        page_num = 1
+        while page_num < MAX_PAGES and len(resultados) > 0:
+            listaTweets = []
+            max_id = min([tweet['id'] for tweet in resultados])
+            resultados = twitter.get_home_timeline(since_id=sinceID, count=200,
+                                                   include_rts=False, max_id=max_id)
+            page_num += 1
+
+            for res in resultados:
+                if res['user']['screen_name'].lower() == usuario.lower():
+                    continue
+                created_at = str(res['created_at'].encode('utf-8'))
+                fecha = parse(created_at).strftime('%Y-%m-%d')
+                listaTweets.append(
+                    (
+                        str(res['id_str']),
+                        str(res['text'].encode('utf-8')),
+                        fecha
+                    )
+                )
+
+            self.abrir_cursor()
+
+            self.cursor.executemany(query, listaTweets[1:])
             self.db.commit()
+            self.cerrar_cursor()
 
-    def crear_usuario_en_bd(self, usuario=''):
+            print "Termino pagina "+str(page_num)
+        print "todo guardado"
+        self.clasificarTweets(usuario)
+
+    def clasificarTweets(self, usuario):
+        self.abrir_cursor()
+        self.ejecutar_consulta("SELECT tweetID, tweetFecha FROM timeline_"+str(usuario)+" WHERE clasificacion IS NULL")
+        if self.cursor.rowcount > 0:
+            resultados = self.cursor.fetchall()
+        self.cerrar_cursor()
+        tweetsClasificados = server_clasificador.analizar_sentimientos(resultados, True)
+        # Insertar tweets en bd
+        return
+
+    def crear_usuario_en_bd(self, usuario='', oauth_token='', oauth_token_secret=''):
+        print "iniciando crear usuario"
         if usuario == '':
             return -1
-        self.conectar_a_mysql()
         self.abrir_cursor()
         self.ejecutar_consulta("SELECT nombre_usuario FROM usuarios WHERE nombre_usuario=%s", usuario)
 
@@ -55,14 +152,16 @@ class Procesador(object):
             self.cerrar_cursor()
             print "Error en la consulta"
             return -1
-        if self.cursor.rowcount < 1:
-            query = "INSERT INTO usuarios(nombre_usuario, preferencias_peliculas, preferencias_musica) \
-                     VALUES(%s, '{}', '{}')"
-            self.ejecutar_consulta(query, usuario)
+        if self.cursor.rowcount == 0:
+
+            query = "INSERT INTO usuarios(nombre_usuario, preferencias_peliculas, preferencias_musica, \
+                            oauth_token, oauth_token_secret) VALUES(%s, '{}', '{}', %s, %s)"
+            self.ejecutar_consulta(query, [usuario, oauth_token, oauth_token_secret])
             self.db.commit()
 
-            query = "CREATE TABLE timeline_"+usuario+"(tweetID VARCHAR(25), tweetTexto TEXT, tweetFecha DATE, clasificacion VARCHAR(15))"
-            self.ejecutar_consulta(query, usuario)
+            query = "CREATE TABLE timeline_"+str(usuario)+"(tweetID VARCHAR(25) PRIMARY KEY, tweetTexto TEXT, \
+                        tweetFecha DATE, clasificacion VARCHAR(15))"
+            self.ejecutar_consulta(query)
             self.db.commit()
 
             print "Usuario Creado"
@@ -230,21 +329,7 @@ class Procesador(object):
         return objeto_puntaje
 
     def cerrar_cursor(self):
-        """Cerrar cursor"""
         self.cursor.close()
-
-    def ejecutar(self, query, values=''):
-        """Compilar todos los procesos"""
-        # ejecuta todo el proceso solo si las propiedades han sido definidas
-        if (self.db_host and self.db_user and self.db_pass and self.db_name and query):
-            self.conectar_a_mysql()
-            self.abrir_cursor()
-            self.ejecutar_consulta(query, values)
-            self.send_commit(query)
-            self.traer_datos()
-            self.cerrar_cursor()
-
-            return self.rows
 
     def conectar_a_twitter(self):
         APP_KEY = '4EDYH92aDYG06Mak7xg'

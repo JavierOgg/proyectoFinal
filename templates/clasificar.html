@@ -1,4 +1,5 @@
 $def with (tweets, categorias)
+$categorias.append("descartar")
 $code:
 	def minimizar(palabra):
 		return palabra.lower()
@@ -6,13 +7,16 @@ $code:
 	def sinEspacios(palabra):
 		return palabra.strip()
 
+	def titulo(palabra):
+		return palabra.title()
+
 <form>
 	<table id="tabla_clasificacion" class="table">
 		<thead>
 			<tr>
 				<th>Tweet</th>
 				$for categoria in categorias:
-					<th class="categoria">$sinEspacios(categoria)</th>
+					<th class="categoria">$titulo(sinEspacios(categoria))</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -25,7 +29,7 @@ $code:
 						<td><input type="radio" class="radioButton" name="$iteracion" id="$iteracion"
 						$if loop.index0 == 0:
 							checked="checked"
-						 value="$sinEspacios(categoria)">
+						 value="$minimizar(sinEspacios(categoria))">
 
 
 						 </td>

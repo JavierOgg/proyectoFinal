@@ -1,12 +1,17 @@
 # saved as greeting.py
 
 import Pyro4
+import sys
+
 
 from funciones import entrenarClasificador
 from funciones import clasificarTweets
 
 server_almacenador = Pyro4.Proxy("PYRONAME:quehago.almacenador")    # use name server object lookup uri shortcut
 
+Pyro4.config.ONEWAY_THREADED = True
+
+tipoClasificador = sys.argv[1]
 
 class Clasificador(object):
 
@@ -14,8 +19,12 @@ class Clasificador(object):
         #self.entrenar_clasificador()
         return
 
-    def entrenar_clasificador(self, archivo='sentiment2.csv'):
-        print archivo
+    def entrenar_clasificador(self, archivo='default'):
+        if archivo == "default":
+            if tipoClasificador == "sentimientos":
+                archivo = "sentiment2.csv"
+            else:
+                archivo = "categorias.csv"
         self.clasificador, self.word_features, self.sentimientos = entrenarClasificador(archivo)
         return
 
@@ -40,12 +49,19 @@ class Clasificador(object):
         for tweet in tweets:
             if tweet['id'] not in tweetsExistentes:
                 writer.writerow([tweet['id'], tweet['clasificacion'], tweet['tweet'].encode("utf-8")])
+        fp.close()
         return "ok"
+
+    def clasificar_tweets(self, tweets):
+        tweetsClasificados = clasificarTweets(self.clasificador, tweets, self.word_features, self.sentimientos)
+        server_almacenador.set_tweets_clasificados(tweetsClasificados)
+        return tweetsClasificados
 
     def analizar_sentimientos(self):
         try:
             tweets = server_almacenador.get_tweets()
-            server_almacenador.set_tweets_clasificados(clasificarTweets(self.clasificador, tweets, self.word_features, self.sentimientos))
+            tweetsClasificados = clasificarTweets(self.clasificador, tweets, self.word_features, self.sentimientos)
+            server_almacenador.set_tweets_clasificados(tweetsClasificados)
             return "Tweets clasificados"
         except NameError:
             return "Antes de ejecutar esta funcion debe llamar a entrenar_clasificador"
@@ -58,7 +74,7 @@ servidor_clasificador = Clasificador()
 daemon = Pyro4.Daemon()                 # make a Pyro daemon
 ns = Pyro4.locateNS()                   # find the name server
 uri = daemon.register(servidor_clasificador)   # register the greeting object as a Pyro object
-ns.register("quehago.clasificador", uri)  # register the object with a name in the name server
+ns.register("quehago.clasificador."+tipoClasificador, uri)  # register the object with a name in the name server
 
 print 'Ready.'
 daemon.requestLoop()                  # start the event loop of the server to wait for calls
